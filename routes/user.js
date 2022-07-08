@@ -23,10 +23,11 @@ router.post("/register", async (req, res) => {
       email: email,
       password: hashedPassword,
     });
+    const user = await newUser.save();
     const newProfile = new UserProfile({
+      _id: user._id,
       img: "avatar.jpeg",
     });
-    const user = await newUser.save();
     const profile = await newProfile.save();
     res.status(200).json({
       message: "User successfully registered",
@@ -73,7 +74,7 @@ router.put("/update/:id", async (req, res) => {
     const user = await User.findByIdAndUpdate(req.params.id, {
       $set: req.body,
     });
-    res.status(200).json({ messsage: "Updated details", user: user });
+    res.status(200).json({ message: "Updated details", user: user });
   } catch (err) {
     return res.status(500).json({ messsage: "Invalid Token", error: err });
   }
